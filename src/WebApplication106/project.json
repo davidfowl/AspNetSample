@@ -1,0 +1,23 @@
+﻿{
+  "webroot": "wwwroot",
+  "version": "1.0.0-*",
+  "compilationOptions": {
+    "emitEntryPoint": true,
+    "allowUnsafe": true
+  },
+  "dependencies": {
+    "System.Console": "4.0.0-beta-23109",
+    "System.Net.Libuv": "1.0.0",
+    "System.Buffers": "1.0.0",
+    "Microsoft.AspNet.Http.Abstractions": "1.0.0-*"
+  },
+  "commands": {
+    "WebApplication106": "WebApplication106"
+  },
+  "frameworks": {
+    "dnxcore50": { }
+  },
+  "exclude": [
+    "wwwroot"
+  ]
+}
