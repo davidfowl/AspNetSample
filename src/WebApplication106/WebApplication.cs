@@ -76,10 +76,7 @@ namespace Microsoft.AspNet.Hosting
 
         private static void Append(byte[] responseBuffer, ref int written, ArraySegment<byte> buffer)
         {
-            if (written + buffer.Count >= responseBuffer.Length)
-            {
-                Array.Resize(ref responseBuffer, responseBuffer.Length * 2);
-            }
+            EnsureSize(ref responseBuffer, written, buffer.Count);
 
             Array.Copy(buffer.Array, buffer.Offset, responseBuffer, written, buffer.Count);
 
@@ -99,24 +96,38 @@ namespace Microsoft.AspNet.Hosting
 
         private static void Append(byte[] responseBuffer, ref int written, int value)
         {
-            Append(responseBuffer, ref written, itoa(value));
-        }
+            int count = 0;
+            int countValue = value;
 
-        private static string itoa(int value)
-        {
-            char[] buffer = new char[10];
-            int at = buffer.Length - 1;
-            while (value > 0)
+            while (countValue > 0)
+            {
+                countValue /= 10;
+                count++;
+            }
+
+            EnsureSize(ref responseBuffer, written, count);
+
+            written += count;
+
+            // Start writing from the end
+            int pos = written - 1;
+
+            while (count > 0)
             {
                 var d = value % 10;
                 value /= 10;
+                count--;
 
-                buffer[at--] = (char)(d + '0');
+                responseBuffer[pos--] = (byte)(d + '0');
             }
+        }
 
-            at++;
-
-            return new string(buffer, at, buffer.Length - at);
+        private static void EnsureSize(ref byte[] responseBuffer, int written, int count)
+        {
+            if (written + count >= responseBuffer.Length)
+            {
+                Array.Resize(ref responseBuffer, responseBuffer.Length * 2);
+            }
         }
 
         private static string GetStatusText(int statusCode)
