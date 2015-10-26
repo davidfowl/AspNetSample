@@ -10,7 +10,7 @@ namespace Microsoft.AspNet.Http
 
         public LibuvHttpResponse(HttpContext context)
         {
-            Body = new MemoryStream();
+            Body = new LibuvStream();
             HttpContext = context;
         }
 
@@ -30,7 +30,7 @@ namespace Microsoft.AspNet.Http
                 _contentLength = value;
             }
         }
-    
+
 
         public override string ContentType { get; set; }
 

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Microsoft.AspNet.Builder
@@ -17,7 +16,8 @@ namespace Microsoft.AspNet.Builder
 
         public ApplicationBuilder Run(RequestDelegate handler)
         {
-            return Use(next => context => handler(context));
+            Use(next => context => handler(context));
+            return this;
         }
 
         public RequestDelegate Build()
@@ -25,14 +25,13 @@ namespace Microsoft.AspNet.Builder
             RequestDelegate app = context =>
             {
                 context.Response.StatusCode = 404;
-                return Task.FromResult(0);
+
+                return Task.CompletedTask;
             };
 
-            _components.Reverse();
-
-            foreach (var component in _components)
+            for (int i = _components.Count - 1; i >= 0; i--)
             {
-                app = component(app);
+                app = _components[i](app);
             }
 
             return app;

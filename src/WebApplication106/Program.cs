@@ -1,14 +1,13 @@
 ﻿using Microsoft.AspNet.Builder;
+using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Http;
 
-namespace WebApplication106
+namespace WebApplication1062
 {
     public class Startup
     {
         public static void Configure(ApplicationBuilder app)
         {
-            app.UseStaticFiles();
-
             app.Run(context =>
             {
                 return context.Response.WriteAsync("Hello World!");
